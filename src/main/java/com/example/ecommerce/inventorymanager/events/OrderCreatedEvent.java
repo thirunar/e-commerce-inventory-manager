@@ -1,9 +1,13 @@
 package com.example.ecommerce.inventorymanager.events;
 
+import com.example.ecommerce.inventorymanager.model.OrderItem;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.Singular;
+
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -11,7 +15,8 @@ import lombok.NoArgsConstructor;
 @Builder(toBuilder = true)
 public class OrderCreatedEvent {
 
-    private Integer productId;
+    private Integer id;
 
-    private Integer quantity;
+    @Singular
+    private List<OrderItem> items;
 }

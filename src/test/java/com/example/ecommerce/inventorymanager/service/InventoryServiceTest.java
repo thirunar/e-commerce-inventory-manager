@@ -5,6 +5,7 @@ import com.example.ecommerce.inventorymanager.entity.Inventory;
 import com.example.ecommerce.inventorymanager.entity.Product;
 import com.example.ecommerce.inventorymanager.events.OrderCreatedEvent;
 import com.example.ecommerce.inventorymanager.events.RunningOutOfStockEvent;
+import com.example.ecommerce.inventorymanager.model.OrderItem;
 import com.example.ecommerce.inventorymanager.repository.InventoryRepository;
 import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -58,7 +59,7 @@ class InventoryServiceTest {
 
     @Test
     void shouldAddAnInventoryItem() {
-        Inventory inventory = Inventory.builder().product(Product.builder().build()).inStock(10).build();
+        Inventory inventory = Inventory.builder().productId(1).inStock(10).build();
 
         inventoryService.createInventory(inventory);
 
@@ -80,22 +81,24 @@ class InventoryServiceTest {
     }
     @Test
     void shouldFetchTheInventoryAndThenUpdateTheStock() {
-        when(repository.findByProductId(any())).thenReturn(Inventory.builder().product(Product.builder().id(1).build()).inStock(10).build());
+        when(repository.findByProductId(any())).thenReturn(Inventory.builder().productId(1).inStock(10).build());
 
-        inventoryService.updateInventory(OrderCreatedEvent.builder().productId(1).quantity(2).build());
+        inventoryService.updateInventory(OrderCreatedEvent.builder().item(OrderItem.builder().productId(1).quantity(2).build()).build());
 
         verify(repository).findByProductId(1);
         verify(repository).save(argThat(inventory -> {
             assertThat(inventory.getInStock()).isEqualTo(8);
             return true;
         }));
+
+
     }
 
     @Test
     void shouldPublishOutOfStockEventIfTheQuantityIsLessThanThreshold() {
-        when(repository.findByProductId(any())).thenReturn(Inventory.builder().product(Product.builder().id(1).build()).inStock(5).build());
+        when(repository.findByProductId(any())).thenReturn(Inventory.builder().productId(1).inStock(5).build());
 
-        inventoryService.updateInventory(OrderCreatedEvent.builder().productId(1).quantity(4).build());
+        inventoryService.updateInventory(OrderCreatedEvent.builder().item(OrderItem.builder().productId(1).quantity(4).build()).build());
 
         ConsumerRecord record = KafkaTestUtils.getSingleRecord(consumer, "product_out_of_stock_event_v1");
 

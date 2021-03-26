@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -25,7 +26,7 @@ public class Product {
 
     private String name;
 
-    @ManyToOne(targetEntity = ProductCategory.class)
+    @ManyToOne(targetEntity = ProductCategory.class, cascade = CascadeType.ALL)
     private ProductCategory category;
 
     private BigDecimal price;

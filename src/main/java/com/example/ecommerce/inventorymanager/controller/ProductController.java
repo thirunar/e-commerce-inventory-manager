@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -15,7 +16,7 @@ public class ProductController {
     private final ProductService service;
 
     @PostMapping("/product")
-    public Product createProduct(Product product) {
+    public Product createProduct(@RequestBody Product product) {
         return service.createProduct(product);
     }
 

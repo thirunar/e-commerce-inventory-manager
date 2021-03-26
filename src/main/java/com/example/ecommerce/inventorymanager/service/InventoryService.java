@@ -34,19 +34,22 @@ public class InventoryService {
     }
 
     public void updateInventory(OrderCreatedEvent orderCreatedEvent) {
-        Inventory inventory = repository.findByProductId(orderCreatedEvent.getProductId());
+        orderCreatedEvent.getItems()
+                .forEach(item -> {
+                    Inventory inventory = repository.findByProductId(item.getProductId());
 
-        inventory.setInStock(inventory.getInStock() - orderCreatedEvent.getQuantity());
+                    inventory.setInStock(inventory.getInStock() - item.getQuantity());
 
-        repository.save(inventory);
+                    repository.save(inventory);
 
-        if (threshold >= inventory.getInStock()) {
-            Message<RunningOutOfStockEvent> message = MessageBuilder.withPayload(RunningOutOfStockEvent.builder()
-                    .productId(inventory.getProduct().getId())
-                    .currentStock(inventory.getInStock()).build())
-                    .setHeader(KafkaHeaders.TOPIC, outOfStockTopic)
-                    .build();
-            kafkaTemplate.send(message);
-        }
+                    if (threshold >= inventory.getInStock()) {
+                        Message<RunningOutOfStockEvent> message = MessageBuilder.withPayload(RunningOutOfStockEvent.builder()
+                                .productId(inventory.getProductId())
+                                .currentStock(inventory.getInStock()).build())
+                                .setHeader(KafkaHeaders.TOPIC, outOfStockTopic)
+                                .build();
+                        kafkaTemplate.send(message);
+                    }
+                });
     }
 }

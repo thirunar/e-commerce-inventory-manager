@@ -1,8 +1,6 @@
 package com.example.ecommerce.inventorymanager.repository;
 
 import com.example.ecommerce.inventorymanager.entity.Inventory;
-import com.example.ecommerce.inventorymanager.entity.Product;
-import com.example.ecommerce.inventorymanager.entity.ProductCategory;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -17,19 +15,11 @@ class InventoryRepositoryTest {
     @Autowired
     private InventoryRepository repository;
 
-    @Autowired
-    private ProductRepository productRepository;
-
-    @Autowired
-    private ProductCategoryRepository categoryRepository;
-
     @Test
     void shouldReturnInventoryBasedOnProductId() {
-        ProductCategory category = categoryRepository.save(ProductCategory.builder().id(1).name("Mobile").build());
-        Product product = productRepository.save(Product.builder().category(category).build());
-        Inventory inventory = repository.save(Inventory.builder().product(product).inStock(10).build());
+        Inventory inventory = repository.save(Inventory.builder().productId(1).inStock(10).build());
 
-        Inventory actualInventory = repository.findByProductId(product.getId());
+        Inventory actualInventory = repository.findByProductId(1);
 
         assertThat(actualInventory).isEqualTo(inventory);
     }

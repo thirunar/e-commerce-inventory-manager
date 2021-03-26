@@ -1,4 +1,4 @@
-package com.example.ecommerce.inventorymanager.entity;
+package com.example.ecommerce.inventorymanager.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,17 +11,15 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Data
-@Entity(name = "INVENTORY")
 @Builder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class Inventory {
+public class OrderItem {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
     private Integer productId;
 
-    private Integer inStock;
+    private Integer quantity;
+
 }

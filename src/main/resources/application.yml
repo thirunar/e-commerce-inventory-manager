@@ -17,3 +17,5 @@ spring:
       produce:
         inventory:
           out-of-stock: product_out_of_stock_event_v1
+server:
+  port: 8250

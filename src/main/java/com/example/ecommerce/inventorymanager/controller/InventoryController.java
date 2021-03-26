@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -17,7 +18,7 @@ public class InventoryController {
     private final InventoryService service;
 
     @PostMapping("/inventory")
-    public Inventory createInventory(Inventory inventory) {
+    public Inventory createInventory(@RequestBody Inventory inventory) {
         return service.createInventory(inventory);
     }
 

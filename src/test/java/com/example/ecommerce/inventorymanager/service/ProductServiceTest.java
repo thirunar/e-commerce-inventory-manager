@@ -1,7 +1,10 @@
 package com.example.ecommerce.inventorymanager.service;
 
 import com.example.ecommerce.inventorymanager.entity.Product;
+import com.example.ecommerce.inventorymanager.entity.ProductCategory;
 import com.example.ecommerce.inventorymanager.repository.ProductRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,8 +39,9 @@ class ProductServiceTest {
     }
 
     @Test
-    void shouldGetTheProductById() {
-        Product product = Product.builder().id(1).build();
+    void shouldGetTheProductById() throws JsonProcessingException {
+        Product product = Product.builder().id(1).category(ProductCategory.builder().name("MOBILE").description("Mobile Phones").build()).name("iPhone").build();
+        System.out.println(new ObjectMapper().writeValueAsString(product));
         when(repository.findById(any())).thenReturn(Optional.of(product));
 
         Product productFromRepo = service.getProduct(1);

@@ -2,6 +2,7 @@ package com.example.ecommerce.inventorymanager.listener;
 
 import com.example.ecommerce.inventorymanager.config.KafkaConfig;
 import com.example.ecommerce.inventorymanager.events.OrderCreatedEvent;
+import com.example.ecommerce.inventorymanager.model.OrderItem;
 import com.example.ecommerce.inventorymanager.service.InventoryService;
 import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -80,7 +81,7 @@ class InventoryListenerTest {
 
     @Test
     void shouldInvokeTheListener() {
-        OrderCreatedEvent orderCreated = OrderCreatedEvent.builder().productId(1).quantity(1).build();
+        OrderCreatedEvent orderCreated = OrderCreatedEvent.builder().item(OrderItem.builder().productId(1).quantity(1).build()).build();
         Message<OrderCreatedEvent> orderCreatedEvent = MessageBuilder.withPayload(orderCreated)
                 .setHeader(KafkaHeaders.TOPIC, "order_created_event_v1")
                 .build();
